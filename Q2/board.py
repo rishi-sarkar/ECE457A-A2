@@ -1,10 +1,11 @@
 import numpy as np
 
+# each cell in the board
 class Cell:
     def __init__(self, coordinates) -> None:
         self.x, self.y = coordinates
-        self.occupied = 0
-        self.neighbors = self.openPaths()
+        self.occupied = 0 # 0 - empty; 1 - USER; -1 - COMP
+        self.neighbors = self.openPaths() # number of empty neighbors
         self.value = 0
 
     def openPaths(self):
