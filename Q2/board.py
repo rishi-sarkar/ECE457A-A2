@@ -7,16 +7,22 @@ class Cell:
         self.occupied = 0 # 0 - empty; 1 - USER; -1 - COMP
         self.neighbors = self.openPaths() # number of empty neighbors
         self.value = 0
+        
+    @property
+    def occupied(self):
+        return 0 if self.value == 0 else self.occupied
 
-    def openPaths(self):
+    @property
+    def neighbors(self):
         neighbors = []
         for i in range(-1, 2):
             for j in range(-1, 2):
                 if (self.x+i) < 0 or (self.x+i) > 3:
                     continue
-                if map[self.x+i][self.y+j].occupied == self.occupied:
+                if (i == 0 and j == 0):
+                    continue
+                if map[self.x+i][self.y+j].occupied in (self.occupied, 0):
                     neighbors.append((i,j))
-        self.neighbors = neighbors
         return neighbors
 
 

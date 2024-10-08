@@ -25,3 +25,42 @@ def gameplay(currentNode):
 
         currentNode.updateMap()
     return start, stepsTaken
+
+
+def DFS(currentNode):
+    if
+    if (currentNode.outBounds()):
+        return 0
+    if(currentNode.location() == 7 or currentNode.location() == 1):
+        return 0
+        
+    if (currentNode.exit()):
+        return currentNode
+    
+    memory[currentNode.i][currentNode.j] = 7
+    
+    path.append(DFS(Node(currentNode.i+1, currentNode.j)))
+    if(path[0]):
+        return currentNode
+    path.pop(0)
+    memory[currentNode.i][currentNode.j] = 7
+    
+    path.append(DFS(Node(currentNode.i, currentNode.j+1)))
+    if(path[0]):
+        return currentNode
+    path.pop(0)
+    memory[currentNode.i][currentNode.j] = 7
+    
+    path.append(DFS(Node(currentNode.i-1, currentNode.j)))
+    if(path[0]):
+        return currentNode
+    path.pop(0)
+    memory[currentNode.i][currentNode.j] = 7
+    
+    path.append(DFS(Node(currentNode.i, currentNode.j-1)))
+    if(path[0]):
+        return currentNode
+    path.pop(0)
+    memory[currentNode.i][currentNode.j] = 7
+    
+    return 0

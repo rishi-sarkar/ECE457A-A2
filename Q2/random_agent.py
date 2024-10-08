@@ -1,19 +1,22 @@
 from board import *
+from agent import Agent
 import random
 
-class RandomAgent:
-    def __init__(self, piece):
-        self.piece = piece
-    
-    def occupiedSquares(self):
-        occupiedSquares = []
-        for i in range(4):
-            for j in range(4):
-                if board[i][j].occupied == self.piece:
-                    occupiedSquares.append((i,j))
-        return occupiedSquares
+
+class RandomAgent(Agent):
     def randomMove(self):
-        occupiedSquares = self.occupiedSquares()
-        i = random.randint(0, len(occupiedSquares))
+        if (self.lost()):
+            return False
+        # assign square a random occupied square that has >0 open paths
+        square = random.choice(self.occupiedSquares)
+        
+        while (len(square.openPaths()) == 0):
+            square = random.choice(self.occupiedSquares)
+        
+        direction = random.choice(square.openPaths())
+        
+        for _ in range(1,4):
+            square
         
         
+            
