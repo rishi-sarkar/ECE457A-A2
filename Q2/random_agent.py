@@ -15,8 +15,7 @@ class RandomAgent(Agent):
         
         direction = random.choice(square.openPaths())
         
-        for _ in range(1,4):
-            square
+        self.place(square, direction)
         
         
             

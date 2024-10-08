@@ -1,16 +1,23 @@
 import numpy as np
+from random_agent import RandomAgent
 
 # each cell in the board
 class Cell:
     def __init__(self, coordinates) -> None:
         self.x, self.y = coordinates
-        self.occupied = 0 # 0 - empty; 1 - USER; -1 - COMP
-        self.neighbors = self.openPaths() # number of empty neighbors
+        self._occupied = 0 # 0 - empty; 1 - USER; -1 - COMP
+        self._neighbors = [] # number of empty neighbors
         self.value = 0
         
     @property
     def occupied(self):
-        return 0 if self.value == 0 else self.occupied
+        if (self.value == 0):
+            self._occupied = 0
+        return self._occupied
+    
+    @occupied.setter
+    def occupied(self, value):
+        self._occupied = value
 
     @property
     def neighbors(self):
@@ -23,19 +30,13 @@ class Cell:
                     continue
                 if map[self.x+i][self.y+j].occupied in (self.occupied, 0):
                     neighbors.append((i,j))
-        return neighbors
+        self._neighbors = neighbors
+        return self._neighbors
 
 
+
+# initialize players and map
 board = np.array([[Cell((i, j)) for j in range(4)] for i in range(4)])
-# init players and map
-USER = 1
-COMP = -1
-
-board[0][0].occupied = USER
-board[0][0].value = 10
-
-board[3][3].occupied = COMP
-board[3][3].value = 10
 
 def print_map():
     for i in range(4):
