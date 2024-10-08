@@ -10,10 +10,10 @@ class RandomAgent(Agent):
         # assign square a random occupied square that has >0 open paths
         square = random.choice(self.occupiedSquares)
         
-        while (len(square.openPaths()) == 0):
+        while (len(square.neighbors) == 0):
             square = random.choice(self.occupiedSquares)
         
-        direction = random.choice(square.openPaths())
+        direction = random.choice(square.neighbors)
         
         self.place(square, direction)
         

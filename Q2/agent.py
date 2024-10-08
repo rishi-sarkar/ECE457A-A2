@@ -17,9 +17,9 @@ class Agent:
     
     # goes through every piece on board and checks if any have neighbors
     def lost(self):
-        occupiedSquares = self.occupiedSquares() # all of agent's pieces
-        for _ in len(occupiedSquares):
-            if len(occupiedSquares[_].openPaths()) > 0: # all open paths per occupied square
+        occupiedSquares = self.occupiedSquares # all of agent's pieces
+        for _ in occupiedSquares:
+            if len(_.neighbors) > 0: # all open paths per occupied square
                 return False
         return True
     
@@ -28,34 +28,47 @@ class Agent:
         i, j = square.x, square.y
         
         for m in range(1,4):
+            curr_i = i+ m*x
+            curr_j = j+ m*y
             
+            # two cases where remaining stones go to last spot
             if (m == 3):
-                board[i+m*x][j+m*y].value += square.value
-                square.value == 0
-                break
-            
-            if (m == 2 and square.value == 1):
-                board[i+m*x][j+m*y].value += square.value
-                board[i+m*x][j+m*y].occupied = self.piece
+                board[curr_i][curr_j].value += square.value
+                board[curr_i][curr_j].occupied = self.piece
                 square.value = 0
                 break
             
-            board[i+m*x][j+m*y].value += 1*m
-            board[i+m*x][j+m*y].occupied = self.piece
+            if (m == 2 and square.value == 1):
+                board[curr_i][curr_j].value += square.value
+                board[curr_i][curr_j].occupied = self.piece
+                square.value = 0
+                break
+            
+            # placing appropriate amount of stones into current path
+            board[curr_i][curr_j].value += 1*m
+            board[curr_i][curr_j].occupied = self.piece
             square.value -= 1*m
             
+            #checking for empty initial cell, next cell being occupied, or next cell being out of bounds
             if (board[i][j].value == 0):
                 break
             
-            if i+m*x+1 < 0 or i+m*x+1 > 3:
-                board[i+m*x][j+m*y].value += square.value
-                board[i+m*x][j+m*y].occupied = self.piece
-                square.value == 0
+            if curr_i+x < 0 or curr_i+1+x > 3:
+                board[curr_i][curr_j].value += square.value
+                square.value = 0
+                break
             
-            if j+m*y+1 < 0 or j+m*y+1 > 3:
-                board[i+m*x][j+m*y].value += square.value
-                board[i+m*x][j+m*y].occupied = self.piece
-                square.value == 0
+            if curr_j+y < 0 or curr_j+y > 3:
+                board[curr_i][curr_j].value += square.value
+                square.value = 0
+                break
+                        
+            if (board[curr_i+x][curr_j+y].occupied == self.piece*(-1)):
+                board[curr_i][curr_j].value += square.value
+                square.value = 0
+                break
+            
+            print_map()
             
             
         

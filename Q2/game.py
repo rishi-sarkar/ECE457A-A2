@@ -1,4 +1,5 @@
 from board import *
+from random_agent import RandomAgent
 
 
 def main():
@@ -18,6 +19,7 @@ def main():
         turn = move % 2
         move += 1
         players[turn].randomMove()
+        print_map()
     
     
 
