@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import sys
 import random
 import matplotlib.pyplot as plt
 
@@ -16,7 +17,10 @@ base_config = {
 
 class Question1():
     
-    def __init__(self):
+    def __init__(self, is_debug=False):
+        # Constructor params
+        self.is_debug = is_debug
+        
         # problem definition
         self.max_x = 100
         self.min_x = -100
@@ -123,8 +127,13 @@ class Question1():
             self.x_cache.append(self.curr_sol[0])
             self.y_cache.append(self.curr_sol[1])
             self.z_cache.append(self.easom_function(self.curr_sol[0], self.curr_sol[1]))
-            #print(f"Current Temperature: {self.curr_temp}")
-            #print(f"Current State: ({self.curr_sol[0]},{self.curr_sol[1]}) -> {self.easom_function(self.curr_sol[0], self.curr_sol[1])}\n\n")
+            
+            # Print current state and temperature if requested
+            if(self.is_debug):
+                sys.stdout.write(f"Current Temperature: {self.curr_temp} | Current State: ({self.curr_sol[0]},{self.curr_sol[1]}) -> {self.easom_function(self.curr_sol[0], self.curr_sol[1])} \r")
+                sys.stdout.flush()
+                #print(f"Current Temperature: {self.curr_temp}")
+                #print(f"Current State: ({self.curr_sol[0]},{self.curr_sol[1]}) -> {self.easom_function(self.curr_sol[0], self.curr_sol[1])}\n\n")
             
         
         print("\n\n\n---Solver Complete---")
@@ -153,10 +162,24 @@ class Question1():
         # Display the plots
         plt.tight_layout()  # Adjust layout to prevent overlap
         plt.savefig(f'{self.name}.png')
-        #plt.show()
+        if(self.is_debug):
+            plt.show()
 
 
-solver = Question1()
+solver = Question1(True)
+
+test_config = {
+    'name': 'test_config',
+    'alpha': 0.1,
+    'initial_temp': 10000,
+    'final_temp': 20,
+    'max_stabilization_time': 100,
+    'step_size': 0.0001,
+    'initial_sol': [3,3],
+    'temp_decrement_rule': 'linear'
+}
+
+
 solver.set_params(base_config)
 solver.run_solver()
 solver.save_plot()
@@ -187,28 +210,28 @@ solver.save_plot()
 #     solver.save_plot()
     
 # Experiment 3
-annealing_schedules = [
-    {"final_temp": base_config["final_temp"], "max_stabilization_time": base_config["max_stabilization_time"], "temp_decrement_rule":base_config["temp_decrement_rule"], "alpha": base_config["alpha"]}, # base config
-    {"final_temp": base_config["final_temp"], "max_stabilization_time": base_config["max_stabilization_time"], "temp_decrement_rule":base_config["temp_decrement_rule"], "alpha": 0.3},
-    {"final_temp": base_config["final_temp"], "max_stabilization_time": 1000, "temp_decrement_rule":base_config["temp_decrement_rule"], "alpha": base_config["alpha"]},
-    {"final_temp": base_config["final_temp"], "max_stabilization_time": base_config["max_stabilization_time"], "temp_decrement_rule":"geometric", "alpha": base_config["alpha"]},
-    {"final_temp": base_config["final_temp"], "max_stabilization_time": base_config["max_stabilization_time"], "temp_decrement_rule":"geometric", "alpha": 0.96},
-    {"final_temp": base_config["final_temp"], "max_stabilization_time": base_config["max_stabilization_time"], "temp_decrement_rule":"geometric", "alpha": 0.85},
-    {"final_temp": base_config["final_temp"], "max_stabilization_time": 1000, "temp_decrement_rule":"geometric", "alpha": base_config["alpha"]},
-    {"final_temp": base_config["final_temp"], "max_stabilization_time": 1, "temp_decrement_rule":"slow_decrease", "alpha": base_config["alpha"]},
-    {"final_temp": base_config["final_temp"], "max_stabilization_time": 1, "temp_decrement_rule":"slow_decrease", "alpha":0.3},
-    {"final_temp": base_config["final_temp"], "max_stabilization_time": 1, "temp_decrement_rule":"slow_decrease", "alpha":0.6},
-]
+# annealing_schedules = [
+#     {"final_temp": base_config["final_temp"], "max_stabilization_time": base_config["max_stabilization_time"], "temp_decrement_rule":base_config["temp_decrement_rule"], "alpha": base_config["alpha"]}, # base config
+#     {"final_temp": base_config["final_temp"], "max_stabilization_time": base_config["max_stabilization_time"], "temp_decrement_rule":base_config["temp_decrement_rule"], "alpha": 0.3},
+#     {"final_temp": base_config["final_temp"], "max_stabilization_time": 1000, "temp_decrement_rule":base_config["temp_decrement_rule"], "alpha": base_config["alpha"]},
+#     {"final_temp": base_config["final_temp"], "max_stabilization_time": base_config["max_stabilization_time"], "temp_decrement_rule":"geometric", "alpha": base_config["alpha"]},
+#     {"final_temp": base_config["final_temp"], "max_stabilization_time": base_config["max_stabilization_time"], "temp_decrement_rule":"geometric", "alpha": 0.96},
+#     {"final_temp": base_config["final_temp"], "max_stabilization_time": base_config["max_stabilization_time"], "temp_decrement_rule":"geometric", "alpha": 0.85},
+#     {"final_temp": base_config["final_temp"], "max_stabilization_time": 1000, "temp_decrement_rule":"geometric", "alpha": base_config["alpha"]},
+#     {"final_temp": base_config["final_temp"], "max_stabilization_time": 1, "temp_decrement_rule":"slow_decrease", "alpha": base_config["alpha"]},
+#     {"final_temp": base_config["final_temp"], "max_stabilization_time": 1, "temp_decrement_rule":"slow_decrease", "alpha":0.3},
+#     {"final_temp": base_config["final_temp"], "max_stabilization_time": 1, "temp_decrement_rule":"slow_decrease", "alpha":0.6},
+# ]
 
-for i in range(1, len(annealing_schedules)):
-    new_config = dict(base_config)
+# for i in range(1, len(annealing_schedules)):
+#     new_config = dict(base_config)
     
-    new_config['name'] = f'exp3-{i}'
-    new_config['final_temp'] = annealing_schedules[i-1]['final_temp']
-    new_config['max_stabilization_time'] = annealing_schedules[i-1]['max_stabilization_time']
-    new_config['temp_decrement_rule'] = annealing_schedules[i-1]['temp_decrement_rule']
-    new_config['alpha'] = annealing_schedules[i-1]['alpha']
+#     new_config['name'] = f'exp3-{i}'
+#     new_config['final_temp'] = annealing_schedules[i-1]['final_temp']
+#     new_config['max_stabilization_time'] = annealing_schedules[i-1]['max_stabilization_time']
+#     new_config['temp_decrement_rule'] = annealing_schedules[i-1]['temp_decrement_rule']
+#     new_config['alpha'] = annealing_schedules[i-1]['alpha']
     
-    solver.set_params(new_config)
-    solver.run_solver()
-    solver.save_plot()
+#     solver.set_params(new_config)
+#     solver.run_solver()
+#     solver.save_plot()
