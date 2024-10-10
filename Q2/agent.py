@@ -53,7 +53,7 @@ class Agent:
             if (board[i][j].value == 0):
                 break
             
-            if curr_i+x < 0 or curr_i+1+x > 3:
+            if curr_i+x < 0 or curr_i+x > 3:
                 board[curr_i][curr_j].value += square.value
                 square.value = 0
                 break
@@ -66,10 +66,7 @@ class Agent:
             if (board[curr_i+x][curr_j+y].occupied == self.piece*(-1)):
                 board[curr_i][curr_j].value += square.value
                 square.value = 0
-                break
-            
-            print_map()
-            
+                break            
             
         
         
