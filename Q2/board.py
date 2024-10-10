@@ -5,17 +5,7 @@ class Cell:
     def __init__(self, coordinates) -> None:
         self.x, self.y = coordinates
         self._occupied = 0 # 0 - empty; 1 - USER; -1 - COMP
-        self._neighbors = [] # number of empty neighbors
         self.value = 0
-    
-    # @property
-    # def value(self):
-    #     self._value = board[self.x][self.y]._value
-    #     return self._value
-    
-    # @value.setter
-    # def value(self, value):
-    #     self._value = value
     
     
     @property
@@ -28,8 +18,7 @@ class Cell:
     def occupied(self, value):
         self._occupied = value
 
-    @property
-    def neighbors(self):
+    def neighbors(self, state):
         neighbors = []
         for i in range(-1, 2):
             for j in range(-1, 2):
@@ -39,25 +28,34 @@ class Cell:
                     continue
                 if (i == 0 and j == 0):
                     continue
-                if board[self.x+i][self.y+j].occupied in (self.occupied, 0):
+                if state[self.x+i][self.y+j].occupied in (self.occupied, 0):
                     neighbors.append((i,j))
-        self._neighbors = neighbors
-        return self._neighbors
+        return neighbors
 
 
 
 # initialize players and map
 board = np.array([[Cell((i, j)) for j in range(4)] for i in range(4)])
 
-def print_map():
+# value_board = np.array([[0 in range(4)] in range(4)])
+# player_board = np.array([[0 in range(4)] in range(4)])
+
+# value_board[0][0] = 10
+# value_board[3][3] = 10
+
+# player_board[0][0] = 1
+# player_board[3][3] = -1
+
+
+def print_map(state):
     for i in range(4):
         for j in range(4):
-            if board[i][j].occupied == -1:
-                print("[ " + f"{board[i][j].value:02}" + " ]", end="")
-            elif board[i][j].occupied == 0:
-                print("( " + f"{board[i][j].value:02}" + " )", end="")
+            if state[i][j].occupied == -1:
+                print("[ " + f"{state[i][j].value:02}" + " ]", end="")
+            elif state[i][j].occupied == 0:
+                print("( " + f"{state[i][j].value:02}" + " )", end="")
             else:
-                print("{ " + f"{board[i][j].value:02}" + " }", end="")
+                print("{ " + f"{state[i][j].value:02}" + " }", end="")
         print()
     print()
 
