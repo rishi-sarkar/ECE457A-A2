@@ -7,7 +7,17 @@ class Cell:
         self._occupied = 0 # 0 - empty; 1 - USER; -1 - COMP
         self._neighbors = [] # number of empty neighbors
         self.value = 0
-        
+    
+    # @property
+    # def value(self):
+    #     self._value = board[self.x][self.y]._value
+    #     return self._value
+    
+    # @value.setter
+    # def value(self, value):
+    #     self._value = value
+    
+    
     @property
     def occupied(self):
         if (self.value == 0):

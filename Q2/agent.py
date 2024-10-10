@@ -27,46 +27,25 @@ class Agent:
         x,y = direction
         i, j = square.x, square.y
         
-        for m in range(1,4):
-            curr_i = i+ m*x
-            curr_j = j+ m*y
-            
-            # two cases where remaining stones go to last spot
-            if (m == 3):
-                board[curr_i][curr_j].value += square.value
-                board[curr_i][curr_j].occupied = self.piece
-                square.value = 0
-                break
-            
-            if (m == 2 and square.value == 1):
-                board[curr_i][curr_j].value += square.value
-                board[curr_i][curr_j].occupied = self.piece
-                square.value = 0
-                break
+        # checks for out of bounds on x and y direction as well as next piece in direction being an opponent piece
+        AllowDirection = lambda i, j, piece: -1 < i < 4 and -1 < j < 4 and board[i][j].occupied in (piece, 0)
+        
+        for m in [1,2,10]:
+            i += x
+            j += y
             
             # placing appropriate amount of stones into current path
-            board[curr_i][curr_j].value += 1*m
-            board[curr_i][curr_j].occupied = self.piece
-            square.value -= 1*m
+            board[i][j].value += min(1*m, square.value)
+            square.value -= min(1*m, square.value)
+            
+            # assigning the cell as user's occupied cell
+            board[i][j].occupied = self.piece
             
             #checking for empty initial cell, next cell being occupied, or next cell being out of bounds
             if (board[i][j].value == 0):
                 break
             
-            if curr_i+x < 0 or curr_i+x > 3:
-                board[curr_i][curr_j].value += square.value
+            if (not AllowDirection(i+x, j+y, self.piece)):
+                board[i][j].value += square.value
                 square.value = 0
                 break
-            
-            if curr_j+y < 0 or curr_j+y > 3:
-                board[curr_i][curr_j].value += square.value
-                square.value = 0
-                break
-                        
-            if (board[curr_i+x][curr_j+y].occupied == self.piece*(-1)):
-                board[curr_i][curr_j].value += square.value
-                square.value = 0
-                break            
-            
-        
-        
