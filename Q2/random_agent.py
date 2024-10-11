@@ -4,7 +4,7 @@ import random
 
 
 class RandomAgent(Agent):
-    def move(self, state):
+    def move(self, state, _):
         if (self.lost(state)):
             return False
         # assign square a random occupied square that has >0 open paths

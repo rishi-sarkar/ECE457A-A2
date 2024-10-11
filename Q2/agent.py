@@ -39,10 +39,12 @@ class Agent:
             state[i][j].occupied = self.piece
             
             #checking for empty initial cell, next cell being occupied, or next cell being out of bounds
-            if (state[i][j].value == 0):
+            if (square.value == 0):
+                square.occupied = 0
                 break
             
             if (not AllowDirection(i+x, j+y, self.piece)):
                 state[i][j].value += square.value
+                square.occupied = 0
                 square.value = 0
                 break
