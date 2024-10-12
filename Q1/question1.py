@@ -56,7 +56,7 @@ class Question1():
         return -math.cos(x) * math.cos(y) * math.exp(-(x-math.pi)**2 - (y-math.pi)**2)
     
     def cost_diff_function(self, z_old, z_new):
-        # cost diff function is square error (negative -> trying to go uphill, positive -> trying to go downhill )
+        # cost diff function is regular error (negative -> trying to go uphill, positive -> trying to go downhill )
         return z_old - z_new
     
     def neighbourhood_generator(self, x, y, step):
@@ -105,10 +105,10 @@ class Question1():
                 neighbours = self.neighbourhood_generator(self.curr_sol[0], self.curr_sol[1], self.step_size)
                 
                 # pick a neighbour randomly
-                candidate = neighbours[random.randint(0,len(neighbours)-1)]
+                candidate = neighbours[random.randint(0,len(neighbours)-1)] #TODO: random.choice
                 
-                # calculate cost diff for new solution
-                cost = self.cost_diff_function(self.easom_function(self.curr_sol[0], self.curr_sol[1]), self.easom_function(candidate[0], candidate[1]))
+                # calculate cost diff for new solution (new - old) (positive -> trying to go uphill, negative -> trying to go downhill )
+                cost = self.easom_function(candidate[0], candidate[1]) - self.easom_function(self.curr_sol[0], self.curr_sol[1])
                 
                 # check if candidate is acceptable as new solution
                 if(cost <= 0 or random.random() < self.random_decay(cost, self.curr_temp) ):
@@ -132,14 +132,11 @@ class Question1():
             if(self.is_debug):
                 sys.stdout.write(f"Current Temperature: {self.curr_temp} | Current State: ({self.curr_sol[0]},{self.curr_sol[1]}) -> {self.easom_function(self.curr_sol[0], self.curr_sol[1])} \r")
                 sys.stdout.flush()
-                #print(f"Current Temperature: {self.curr_temp}")
-                #print(f"Current State: ({self.curr_sol[0]},{self.curr_sol[1]}) -> {self.easom_function(self.curr_sol[0], self.curr_sol[1])}\n\n")
-            
         
         print("\n\n\n---Solver Complete---")
         print(f"Final State: ({self.curr_sol[0]},{self.curr_sol[1]}) -> {self.easom_function(self.curr_sol[0], self.curr_sol[1])}")
         
-        pass
+        return
     
     def save_plot(self):
         # Create a figure with two subplots (one above the other)
@@ -172,9 +169,9 @@ test_config = {
     'name': 'test_config',
     'alpha': 0.1,
     'initial_temp': 10000,
-    'final_temp': 20,
-    'max_stabilization_time': 100,
-    'step_size': 0.0001,
+    'final_temp': 0.1,
+    'max_stabilization_time': 1000,
+    'step_size': 0.001,
     'initial_sol': [3,3],
     'temp_decrement_rule': 'linear'
 }
@@ -209,7 +206,7 @@ solver.save_plot()
 #     solver.run_solver()
 #     solver.save_plot()
     
-# Experiment 3
+# # Experiment 3
 # annealing_schedules = [
 #     {"final_temp": base_config["final_temp"], "max_stabilization_time": base_config["max_stabilization_time"], "temp_decrement_rule":base_config["temp_decrement_rule"], "alpha": base_config["alpha"]}, # base config
 #     {"final_temp": base_config["final_temp"], "max_stabilization_time": base_config["max_stabilization_time"], "temp_decrement_rule":base_config["temp_decrement_rule"], "alpha": 0.3},
@@ -219,11 +216,11 @@ solver.save_plot()
 #     {"final_temp": base_config["final_temp"], "max_stabilization_time": base_config["max_stabilization_time"], "temp_decrement_rule":"geometric", "alpha": 0.85},
 #     {"final_temp": base_config["final_temp"], "max_stabilization_time": 1000, "temp_decrement_rule":"geometric", "alpha": base_config["alpha"]},
 #     {"final_temp": base_config["final_temp"], "max_stabilization_time": 1, "temp_decrement_rule":"slow_decrease", "alpha": base_config["alpha"]},
-#     {"final_temp": base_config["final_temp"], "max_stabilization_time": 1, "temp_decrement_rule":"slow_decrease", "alpha":0.3},
-#     {"final_temp": base_config["final_temp"], "max_stabilization_time": 1, "temp_decrement_rule":"slow_decrease", "alpha":0.6},
+#     {"final_temp": base_config["final_temp"], "max_stabilization_time": 1, "temp_decrement_rule":"slow_decrease", "alpha":0.01},
+#     {"final_temp": base_config["final_temp"], "max_stabilization_time": 1, "temp_decrement_rule":"slow_decrease", "alpha":0.001},
 # ]
 
-# for i in range(1, len(annealing_schedules)):
+# for i in range(0, len(annealing_schedules)):
 #     new_config = dict(base_config)
     
 #     new_config['name'] = f'exp3-{i}'
